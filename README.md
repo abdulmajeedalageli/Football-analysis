@@ -4,8 +4,8 @@ A professional-grade football analytics dashboard that integrates Power BI's int
 
 ---
 
-## 📊 Tactical Dashboards
-The Power BI dashboard is built on a Star Schema, allowing coaches and scouts to instantly filter tactical maps by individual players and event types. 
+## 📊 Dynamic Tactical Views
+The dashboard allows coaches and analysts to instantly filter tactical maps by individual players and event types.
 
 **Forward Profile: Kylian Mbappé**
 ![Kylian Mbappe Tactical Flow Map](assets/mbappe_tactical_map.png)
@@ -13,42 +13,37 @@ The Power BI dashboard is built on a Star Schema, allowing coaches and scouts to
 **Midfield Profile: Alexis Mac Allister**
 ![Alexis Mac Allister Passing Network](assets/mac_allister_passing_network.png)
 
-*(Note: Ensure your high-resolution screenshots are uploaded to the `assets` folder in this repository to render above).*
-
 ---
 
 ## 🛠️ Tech Stack
 * **Business Intelligence:** Power BI (Data Modeling, Slicers, Native Visuals)
 * **Data Processing & Analytics:** Python, Pandas, DAX
 * **Spatial Visualization:** matplotlib, mplsoccer, seaborn
-* **Database:** SQLite (1-to-Many Relational Model)
 
 ---
 
-## 🌟 Key Features & Analytical Approach
+## 🏗️ Project Architecture & Phases
 
-### 1. Broadcast-Quality Spatial Mapping (Python)
-Instead of relying on static, misaligned background images, this dashboard uses the `mplsoccer` Python library to mathematically generate an exact 120x80 'Statsbomb' coordinate pitch natively inside Power BI.
-* **Dark Mode Aesthetics:** A high-contrast charcoal (#222222) pitch with silver lines (#c7d5cc) reduces eye strain and makes data points stand out.
-* **Pass Networks:** Maps successful passes (Green) and incomplete passes (Red) with accurate starting and ending vector lines.
-* **Universal Shot/Pass Logic:** Dynamically distinguishes between passes and shots. Shots are highlighted using thicker lines and a distinct "Star" marker, conditionally colored by outcome (Goal vs. Miss/Save).
+### Phase 1: Data Architecture & Modeling
+To ensure the dashboard runs quickly and filters accurately, the underlying data model was streamlined.
+* **Simplified Table Structure:** Removed redundant tables (like split start/end coordinate tables) in favor of a clean schema using just the core `Fact_Events` table and the `Dim_Players` table.
+* **Data Cleaning Logic:** Accounted for professional football data standards where a successful action is often left blank. Built logic to recognize `BLANK()`, "nan", and "Completed" as successful outcomes so Python and Power BI calculate accuracy flawlessly.
+* **1-to-Many Relationships:** Ensured the player dimension table correctly filters the event table, allowing the entire dashboard to instantly react when a specific player is selected.
 
-### 2. Player Territory Heatmaps
-Utilizes Kernel Density Estimation (KDE) via the `seaborn` library to generate smooth, glowing heatmaps using the 'magma' color scale. This visually highlights a player's primary zones of influence, tactical positioning, and spatial dominance.
+### Phase 2: The Advanced Python Pitch Visual
+Instead of relying on a static background image, the primary spatial visualization was built natively using a specialized sports analytics Python library.
+* **Mathematical Pitch Generation (`mplsoccer`):** Deployed the `mplsoccer` library to draw a mathematically perfect pitch grid. This eliminates the "drifting dots" issue caused by misaligned background images.
+* **Standardized Coordinate System:** Locked the visual to the industry-standard 'Statsbomb' 120x80 coordinate scale, ensuring every data point snaps exactly to the correct chalk lines (penalty boxes, midfield circle).
+* **Broadcast-Quality Styling:** Configured a "Dark Mode" aesthetic using a dark charcoal background (`#222222`) with subtle silver lines (`#c7d5cc`). This reduces eye strain and makes the brightly colored data points pop.
 
-### 3. Native Power BI Analytics (DAX)
-* **True Pass Completion KPI:** Accounts for industry-standard blank variables in professional event data (where successful actions are often left blank). Uses DAX to calculate an exact Pass Completion Percentage.
-* **Match Momentum:** Groups event data into 15-minute tactical "bins" to display the volume of actions and success rates across the full 90 minutes. This chart is strictly filtered to prevent off-ball events from artificially inflating possession metrics.
+### Phase 3: Spatial Event Mapping (Passes, Shots, and Density)
+The Python visual was engineered to dynamically map three different types of spatial data simultaneously.
+* **Pass Networks:** Plotted starting coordinates as distinct dots with lines connecting to the end coordinates. Applied conditional formatting: Clean Green (`#2ecc71`) for completed passes and Sharp Red (`#e74c3c`) for incomplete passes.
+* **Shot Tracking (Universal Mapping):** Engineered the script to read both pass and shot columns in the same visual. Shots are automatically distinguished from passes by using a larger, distinct "Star" shape and thicker lines, colored by Goal (Green) or Miss/Save (Red).
+* **Player Territory (KDE Heatmaps):** Implemented Kernel Density Estimation (`seaborn.kdeplot`) to generate a smooth, glowing heatmap overlaid on the pitch. Using the `magma` color scale, this visually highlights a player's primary zones of influence and spatial dominance.
 
-### 4. Full Interactivity
-The dashboard utilizes Power BI's native cross-filtering engine. Selecting a specific player from a slicer, or clicking a specific 15-minute window on the momentum chart, automatically filters the underlying dataset and instantly redraws the Python spatial map for that exact match scenario.
-
----
-
-## ⚙️ Data Architecture & Modeling
-To ensure the dashboard runs quickly and filters accurately, the underlying data model was streamlined using a highly efficient Star Schema. 
-
-* **Simplified Structure:** Removed redundant tables in favor of a clean schema using just the core Fact table and Dimension table.
-* **Fact_Events:** Contains raw match data, including exact `location_x`, `location_y`, `pass_end_x`, `pass_end_y`, `shot_end_x`, `shot_end_y`, and outcome text.
-* **Dim_Players:** Dimension table containing player IDs and names, maintaining a 1-to-Many relationship with the Fact table to allow instant global dashboard filtering.
-* **Data Cleaning Logic:** Built robust logic during the ETL phase to recognize `BLANK()`, "nan", and "Completed" as successful outcomes, ensuring Python and Power BI calculate accuracy flawlessly.
+### Phase 4: Native Power BI Analytics & Interactivity
+To transform the visual from a static map into an interactive tactical tool, native Power BI DAX and charting tools were integrated alongside the Python script.
+* **Headline KPI Card (Pass Completion %):** Authored a precise DAX formula to calculate true pass accuracy (Correct Passes / Total Passes), giving viewers an immediate summary metric.
+* **Match Momentum Chart:** Grouped the raw minute data into 15-minute tactical "bins." Built a stacked bar chart across the bottom of the screen showing action volume and completion rates over time. This chart is strictly filtered to "Passes" to prevent other events (like ball receipts) from artificially inflating the numbers.
+* **Cross-Filtering Interactivity:** Linked the Power BI slicers and native charts directly to the Python visual. Clicking a specific player's name, or a specific 15-minute bar on the momentum chart, automatically filters the coordinates sent to Python, redrawing the pitch instantly for that exact scenario.
