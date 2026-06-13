@@ -1,10 +1,10 @@
-# Advanced Football Tactical Dashboard ⚽📊
+# Football Tactical Dashboard
 
 A professional-grade football analytics dashboard that integrates Power BI's interactive cross-filtering with Python's advanced spatial mapping capabilities. This project transforms raw event data into broadcast-quality tactical visualizations, including pass networks, shot maps, density heatmaps, and match momentum charts.
 
 ---
 
-## 📊 Dynamic Tactical Views
+##  Dynamic Tactical Views
 The dashboard allows coaches and analysts to instantly filter tactical maps by individual players and event types.
 
 **Forward Profile: Kylian Mbappé**
@@ -15,14 +15,14 @@ The dashboard allows coaches and analysts to instantly filter tactical maps by i
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 * **Business Intelligence:** Power BI (Data Modeling, Slicers, Native Visuals)
 * **Data Processing & Analytics:** Python, Pandas, DAX
 * **Spatial Visualization:** matplotlib, mplsoccer, seaborn
 
 ---
 
-## 🏗️ Project Architecture & Phases
+##  Project Architecture & Phases
 
 ### Phase 1: Data Architecture & Modeling
 To ensure the dashboard runs quickly and filters accurately, the underlying data model was streamlined.
